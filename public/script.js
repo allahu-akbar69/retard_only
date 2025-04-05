@@ -59,14 +59,19 @@ const chatBox = document.getElementById('chat-box');
 
   async function sendMessage(userMessage) {
     try {
-      const response = await fetch('/api/chat', {
+      // const response = await fetch('/api/chat', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json'
+      //   },
+      //   body: JSON.stringify({ message: userMessage })
+      // });
+      const res = await fetch('/api/chat', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ message: userMessage })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: msg }),
       });
-
+      
       if (!response.ok) {
         throw new Error(`Server error: ${response.status}`);
       }

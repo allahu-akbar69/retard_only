@@ -37,6 +37,7 @@
 //   }
 // };
 // File: api/chat.js
+// File: api/chat.js
 
 import axios from 'axios';
 
@@ -52,28 +53,20 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Missing Gemini API key' });
   }
 
-  const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent`;
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
   try {
-    const response = await axios.post(
-      `${API_URL}?key=${apiKey}`,
-      {
-        contents: [{ parts: [{ text: message }] }]
-      },
-      {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      }
-    );
+    const geminiResponse = await axios.post(url, {
+      contents: [{ parts: [{ text: message }] }]
+    });
 
     const reply =
-      response.data.candidates?.[0]?.content?.parts?.[0]?.text ||
-      'No response received.';
+      geminiResponse.data.candidates?.[0]?.content?.parts?.[0]?.text ||
+      'No response from Gemini.';
 
     res.status(200).json({ reply });
   } catch (error) {
     console.error('Gemini API Error:', error?.response?.data || error.message);
-    res.status(500).json({ error: 'Gemini API request failed.' });
+    res.status(500).json({ error: 'Error connecting to Gemini API.' });
   }
 }
